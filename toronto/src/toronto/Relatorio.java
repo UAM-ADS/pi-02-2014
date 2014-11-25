@@ -4,17 +4,14 @@ import java.util.ArrayList;
 
 public class Relatorio {
 
-  public ArrayList funcionarios;
+    public ArrayList funcionarios;
+    public ArrayList produtos;
+    public ArrayList pedidos;
 
-  public ArrayList produtos;
+    public void imprime() {
+    }
 
-  public ArrayList pedidos;
-
-  
-  public void imprime() {
-  }
-
-  public Relatorio() {
-  }
+    public Relatorio() {
+    }
 
 }

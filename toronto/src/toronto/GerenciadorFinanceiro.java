@@ -1,26 +1,26 @@
 package toronto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class GerenciadorFinanceiro {
 
-  public static final GerenciadorFinanceiro gerenciador;
+    public static final GerenciadorFinanceiro gerenciador;
 
-  public Vector  GeraRelatório;
-    
-  public Boolean cadastraFuncionario(Usuario funcionario) {
-  return null;
-  }
+    public ArrayList GeraRelatório;
 
-  public void geraRelatorioPeriodo(Date inicio, Date fim) {
-  }
+    public Boolean cadastraFuncionario(Usuario funcionario) {
+        return null;
+    }
 
-  private GerenciadorFinanceiro() {
-  }
+    public void geraRelatorioPeriodo(Date inicio, Date fim) {
+    }
 
-  public GerenciadorFinanceiro gerenciador() {
-  return null;
-  }
+    private GerenciadorFinanceiro() {
+    }
+
+    public GerenciadorFinanceiro gerenciador() {
+        return null;
+    }
 
 }

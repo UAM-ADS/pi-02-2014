@@ -2,19 +2,15 @@ package toronto;
 
 public class NotaFiscal {
 
-  public int numero;
+    public int numero;
+    public Pedido pedido;
+    public Float imposto;
+    public Float valor;
 
-  public Pedido pedido;
+    public NotaFiscal() {
+    }
 
-  public Float imposto;
-
-  public Float valor;
-
-  
-  public NotaFiscal() {
-  }
-
-  public void imprime() {
-  }
+    public void imprime() {
+    }
 
 }

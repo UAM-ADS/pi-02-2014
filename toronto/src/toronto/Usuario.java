@@ -1,39 +1,35 @@
 package toronto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Usuario {
 
-  public String nome;
+    public String nome;
+    public String login;
+    public String senha;
+    public Boolean admin;
+    public Float salario;
 
-  public String login;
+    public ArrayList CadastraProduto;
+    public ArrayList CadastraCliente;
+    public ArrayList AcrescentaProduto;
+    public ArrayList CriaPedido;
+    public ArrayList CadastraFuncionário;
+    public ArrayList ImprimeRelatório;
 
-  public String senha;
+    public Usuario() {
+    }
 
-  public Boolean admin;
+    public Boolean salva() {
+        return null;
+    }
 
-  public Float salario;
+    public Boolean autentica() {
+        return null;
+    }
 
-  public Vector  CadastraProduto;
-  public Vector  CadastraCliente;
-  public Vector  AcrescentaProduto;
-  public Vector  CriaPedido;
-  public Vector  CadastraFuncionário;
-  public Vector  ImprimeRelatório;
-
-  public Usuario() {
-  }
-
-  public Boolean salva() {
-  return null;
-  }
-
-  public Boolean autentica() {
-  return null;
-  }
-
-  public Boolean sair() {
-  return null;
-  }
+    public Boolean sair() {
+        return null;
+    }
 
 }

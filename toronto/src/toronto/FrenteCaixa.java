@@ -1,32 +1,32 @@
 package toronto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class FrenteCaixa {
 
-  public static FrenteCaixa caixa;
+    public static FrenteCaixa caixa;
 
-    public Vector  RemoveProduto;
-    public Vector  GeraNotaFiscal;
-    public Vector  GeraPedido;
+    public ArrayList RemoveProduto;
+    public ArrayList GeraNotaFiscal;
+    public ArrayList GeraPedido;
 
-  public FrenteCaixa() {
-  }
+    public FrenteCaixa() {
+    }
 
-  public FrenteCaixa caixa() {
-  return null;
-  }
+    public FrenteCaixa caixa() {
+        return null;
+    }
 
-  public Pedido geraPedido() {
-  return null;
-  }
+    public Pedido geraPedido() {
+        return null;
+    }
 
-  public Boolean fechaCompra() {
-  return null;
-  }
+    public Boolean fechaCompra() {
+        return null;
+    }
 
-  public Boolean emiteNotaFiscal() {
-  return null;
-  }
+    public Boolean emiteNotaFiscal() {
+        return null;
+    }
 
 }
