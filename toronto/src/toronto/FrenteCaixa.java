@@ -2,20 +2,12 @@ package toronto;
 
 import java.util.ArrayList;
 
-public class FrenteCaixa {
-
-    public static FrenteCaixa caixa;
+public enum FrenteCaixa {
+    caixa;
 
     public ArrayList RemoveProduto;
     public ArrayList GeraNotaFiscal;
     public ArrayList GeraPedido;
-
-    public FrenteCaixa() {
-    }
-
-    public FrenteCaixa caixa() {
-        return null;
-    }
 
     public Pedido geraPedido() {
         return null;

@@ -1,8 +1,7 @@
 package toronto;
 
-public class GerenciadorEstoque {
-
-    public static final GerenciadorEstoque gerenciador;
+public enum GerenciadorEstoque {
+    gerenciador;
 
     public Boolean acrescentaProduto(Produto produto) {
         return null;
@@ -12,15 +11,8 @@ public class GerenciadorEstoque {
         return null;
     }
 
-    private GerenciadorEstoque() {
-    }
-
     public int quantidadeProduto(Produto produto) {
         return 0;
-    }
-
-    public GerenciadorEstoque gerenciador() {
-        return null;
     }
 
 }
