@@ -10,9 +10,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javax.annotation.Resources;
 
-import toronto.Constants.Versao;
-import toronto.Constants;
-import toronto.Utils;
+import toronto.utils.Constants.Versao;
+import toronto.utils.Constants;
+import toronto.utils.Crypto;
 
 /**
  *
@@ -58,7 +58,7 @@ public class Toronto extends Application {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
             stmt.setString(2, user);
-            stmt.setString(3, Utils.md5String(pass));
+            stmt.setString(3, Crypto.md5String(pass));
             stmt.setBoolean(4, true);
             stmt.executeUpdate();
         }

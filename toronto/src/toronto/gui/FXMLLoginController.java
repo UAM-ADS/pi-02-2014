@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package toronto;
+package toronto.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,8 +22,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.sql.*;
-import toronto.Constants;
-import toronto.Utils;
+import toronto.utils.Constants;
+import toronto.utils.Crypto;
 
 /**
  * FXML Controller class
@@ -58,7 +58,8 @@ public class FXMLLoginController implements Initializable {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, loginEmail.getText());
         ResultSet rs = stmt.executeQuery();
-        if (!rs.next() || !rs.getString("senha").equals(Utils.md5String(loginSenha.getText()))) {
+        conn.close();
+        if (!rs.next() || !rs.getString("senha").equals(Crypto.md5String(loginSenha.getText()))) {
             loginErro.setVisible(true);
         } else {
             Scene scene = new Scene((Parent)FXMLLoader.load(getClass().getResource("FXMLMain.fxml")));

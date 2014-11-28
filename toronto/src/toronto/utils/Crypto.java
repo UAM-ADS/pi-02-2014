@@ -1,4 +1,4 @@
-package toronto;
+package toronto.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  *
  * @author mgaldieri
  */
-public class Utils {
+public class Crypto {
     
     public static String md5String(String msg) {
         String digest = null;
