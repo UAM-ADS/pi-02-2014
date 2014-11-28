@@ -19,4 +19,8 @@ public class Constants {
             return ""+Versao.MAJOR.valor+'.'+Versao.MINOR.valor+'.'+Versao.FIX.valor;
         }
     }
+    
+    // Configurações do banco de dados local
+    public static final String JDBC_DRIVER = "org.h2.Driver";
+    public static final String DB_URL = "jdbc:h2:~/.toronto/toronto.db";
 }
