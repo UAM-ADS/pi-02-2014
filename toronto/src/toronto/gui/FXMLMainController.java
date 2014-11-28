@@ -27,6 +27,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tab;
 
 import java.sql.*;
 import toronto.utils.Constants;
@@ -60,6 +61,8 @@ public class FXMLMainController implements Initializable {
     private Label vendaNomeClienteLabel;
     @FXML
     private Label vendaTotalLabel;
+    @FXML
+    private Tab clienteTab;
     @FXML
     private TextField clienteCPFTextField;
     @FXML
