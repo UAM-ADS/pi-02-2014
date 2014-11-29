@@ -269,7 +269,11 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void vendaInsereProd(ActionEvent event) {
+    private void vendaInsereProd(ActionEvent event) throws SQLException {
+        // Busca o produto no banco de dados
+        String sql = "SELECT * FROM produto WHERE produto_id=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        //caixa.adicionaProdutoPedido();
     }
 
     /**
@@ -369,8 +373,8 @@ public class FXMLMainController implements Initializable {
                 dialog.initModality(Modality.WINDOW_MODAL);
                 dialog.initOwner(root);
                 dialog.setScene(dialogScene);
-                FXMLCPFInvalidoModalController controller = (FXMLCPFInvalidoModalController)loader.getController();
-                controller.initParams();
+                FXMLAlertaModalController controller = (FXMLAlertaModalController)loader.getController();
+                controller.initParams(ErroMsg.msg(ErroMsg.ALERTA_CPF_INVALIDO));
                 dialog.centerOnScreen();
                 dialog.show();
             } else {

@@ -13,7 +13,9 @@ public class Erros {
     // Mensagens de erro
     public enum ErroMsg {
         FATAL_CLASSE_INEXISTENTE("O banco de dados apresenta inconsistência. Por favor reinicie o aplicativo."),
-        FATAL_ACESSO_SQL("Houve um erro ao acessar o banco de dados. Por favor reinicie o aplicativo.");
+        FATAL_ACESSO_SQL("Houve um erro ao acessar o banco de dados. Por favor reinicie o aplicativo."),
+        ALERTA_CPF_INVALIDO("O CPF informado é inválido!"),
+        ALERTA_PRODUTO_INEXISTENTE("O produto informado não está cadastrado");
         
         private String valor;
         

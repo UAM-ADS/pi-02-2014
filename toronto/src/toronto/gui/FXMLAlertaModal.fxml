@@ -7,15 +7,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="toronto.gui.FXMLCPFInvalidoModalController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="toronto.gui.FXMLAlertaModalController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Aviso" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Label layoutX="14.0" layoutY="85.0" text="O CPF informado é inválido!" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0" />
+      <Label fx:id="avisoMsgLabel" layoutX="14.0" layoutY="85.0" text="O CPF informado é inválido!" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0" />
       <Button fx:id="cpfInvalidoOkBtn" layoutX="324.0" layoutY="161.0" minWidth="-Infinity" mnemonicParsing="false" onAction="#cpfInvalidoOk" prefWidth="60.0" text="Ok" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
    </children>
 </AnchorPane>

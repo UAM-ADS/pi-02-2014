@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
@@ -18,10 +19,12 @@ import javafx.stage.Stage;
  *
  * @author mgaldieri
  */
-public class FXMLCPFInvalidoModalController implements Initializable {
+public class FXMLAlertaModalController implements Initializable {
     @FXML
     private Button cpfInvalidoOkBtn;
     private Stage dialogStage;
+    @FXML
+    private Label avisoMsgLabel;
 
     /**
      * Initializes the controller class.
@@ -31,8 +34,9 @@ public class FXMLCPFInvalidoModalController implements Initializable {
         // TODO
     }
     
-    public void initParams() {
+    public void initParams(String msg) {
         dialogStage = (Stage) cpfInvalidoOkBtn.getScene().getWindow();
+        avisoMsgLabel.setText(msg);
     }
 
     @FXML
