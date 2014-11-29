@@ -76,18 +76,18 @@ public class Cliente {
         }
     }
 
-    public Boolean validaCPF() {
-        if (cpf ==null || cpf.length() < 11) {
+    public static Boolean validaCPF(String numeroCPF) {
+        if (numeroCPF == null || numeroCPF.length() < 11) {
             return false;
         }
-        String numeros = cpf.substring(0, cpf.length()-3);
-        String verificadores = cpf.substring(cpf.length()-2);
+        String numeros = numeroCPF.substring(0, numeroCPF.length()-2);
+        String verificadores = numeroCPF.substring(numeroCPF.length()-2);
         // Calcula os verificadores esperados
         String teste;
         // Calucla o primeiro digito verificador
         int multiplicador = 2;
         int soma = 0;
-        for (int i=numeros.length(); i==0; i--) {
+        for (int i=numeros.length()-1; i>=0; i--) {
             soma += multiplicador * Character.digit(numeros.charAt(i), 10);
             multiplicador++;
         }
@@ -97,19 +97,19 @@ public class Cliente {
         } else {
             teste = String.valueOf(11-resto);
         }
-        numeros += teste;
         // Calucla o segundo digito verificador
+        numeros += teste;
         multiplicador = 2;
         soma = 0;
-        for (int i=numeros.length(); i==0; i--) {
+        for (int i=numeros.length()-1; i>=0; i--) {
             soma += multiplicador * Character.digit(numeros.charAt(i), 10);
             multiplicador++;
         }
         resto = soma%11;
         if (resto < 2) {
-            teste = "0";
+            teste += "0";
         } else {
-            teste = String.valueOf(11-resto);
+            teste += String.valueOf(11-resto);
         }
         if (teste.equals(verificadores)) {
             return true;

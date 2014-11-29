@@ -1,5 +1,9 @@
 package toronto.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author mgaldieri
@@ -43,4 +47,33 @@ public class Constants {
     public static final String JDBC_DRIVER = "org.h2.Driver";
     public static final String DB_URL = "jdbc:h2:~/.toronto/toronto.db";
     
+    // Lista de estados brasileiros
+    public static final List<String> listaUF = Arrays.asList(
+        "AC",
+        "AL",
+        "AP",
+        "AM",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MT",
+        "MS",
+        "MG",
+        "PA",
+        "PB",
+        "PR",
+        "PE",
+        "PI",
+        "RJ",
+        "RN",
+        "RS",
+        "RO",
+        "RR",
+        "SC",
+        "SP",
+        "SE",
+        "TO");
 }

@@ -71,6 +71,7 @@ public class Toronto extends Application {
         
         primaryStage.setTitle("Systema Toronto v"+Versao.full());
         primaryStage.setScene(scene);
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 

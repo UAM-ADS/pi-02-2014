@@ -25,6 +25,7 @@ import java.sql.*;
 import javafx.event.EventHandler;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.stage.WindowEvent;
+import toronto.Usuario;
 import toronto.utils.Constants;
 import toronto.utils.Crypto;
 
@@ -64,6 +65,11 @@ public class FXMLLoginController implements Initializable {
         if (!rs.next() || !rs.getString("senha").equals(Crypto.md5String(loginSenha.getText()))) {
             loginErro.setVisible(true);
         } else {
+            Usuario user = new Usuario();
+            user.nome = rs.getString("nome");
+            user.login = rs.getString("login");
+            user.salario = rs.getFloat("salario");
+            user.admin = rs.getBoolean("admin");
             URL location = getClass().getResource("FXMLMain.fxml");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(location);
@@ -73,20 +79,11 @@ public class FXMLLoginController implements Initializable {
             Stage stage = (Stage) loginOk.getScene().getWindow();
             stage.setScene(scene);
             final FXMLMainController controller = (FXMLMainController)loader.getController();
-            controller.initParams();
-//            stage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>()
-//            {
-//                @Override
-//                public void handle(WindowEvent window)
-//                {
-//                    controller.initParams();
-//                }
-//            });
+            controller.initParams(user);
+            
+            stage.centerOnScreen();
             stage.show();
             
-            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
-            stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
         }
     }
     
