@@ -30,8 +30,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tab;
 
 import java.sql.*;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.TabPane;
 import toronto.utils.Constants;
 import toronto.utils.Erros.ErroMsg;
+import toronto.Cliente;
 
 /**
  * FXML Controller class
@@ -62,11 +66,15 @@ public class FXMLMainController implements Initializable {
     @FXML
     private Label vendaTotalLabel;
     @FXML
+    private TabPane mainTabPane;
+    @FXML
     private Tab clienteTab;
     @FXML
     private TextField clienteCPFTextField;
     @FXML
     private Button clienteValidaCPFBtn;
+    @FXML
+    private Label clienteCPFInvalidoLabel;
     @FXML
     private TextField clienteNomeTextField;
     @FXML
@@ -128,12 +136,18 @@ public class FXMLMainController implements Initializable {
     
     private static Stage root;
     private static Connection conn;
+    private static Cliente clienteAtual;
+    
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Nothing here...
+    }
+    
+    public void initParams() {
         // Referência ao primaryStage
         root = (Stage) btnSair.getScene().getWindow();
         String erroMsg = null;
@@ -164,6 +178,9 @@ public class FXMLMainController implements Initializable {
                     System.out.println("Não foi possível encontrar o arquivo de definições da modal de erro fatal...");
                 }
             }
+        }
+        if (clienteAtual != null) {
+            vendaNomeClienteLabel.setText(clienteAtual.nome);
         }
     }
     
@@ -207,6 +224,7 @@ public class FXMLMainController implements Initializable {
      */
     @FXML
     private void vendaFinaliza(ActionEvent event) {
+        clienteAtual = null;
     }
 
     /**
@@ -216,7 +234,8 @@ public class FXMLMainController implements Initializable {
      * @throws SQLException 
      */
     @FXML
-    private void vendaBuscaCPF(ActionEvent event) throws SQLException {
+    private void vendaBuscaCPF(ActionEvent event) throws SQLException, IOException {
+        System.out.println("Clique");
         // Limpa o campo de CPF, retirando pontos e traços
         String pattern = "[\\.-]";
         String cpf = clienteCPFTextField.getText().replaceAll(pattern, "");
@@ -230,7 +249,26 @@ public class FXMLMainController implements Initializable {
             vendaCPFTextField.setText("");
             vendaNomeClienteLabel.setText(rs.getString("nome"));
         } else {            // Se o CPF não existir no cadastro
-            
+            // Mostra o diálogo para opção de inserção de novo cliente
+            URL location = getClass().getResource("FXMLCPFInexistenteModal.fxml");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(location);
+            loader.setBuilderFactory(new JavaFXBuilderFactory());
+            Scene dialogScene = new Scene((Parent)loader.load(location.openStream()));
+            // Inicia a cena da caixa de diálogo
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(root);
+            dialog.setScene(dialogScene);
+            FXMLCPFInexistenteModalController controller = (FXMLCPFInexistenteModalController)loader.getController();
+            controller.initParams();
+            controller.setMainController(this);
+            dialog.show();
+
+            // Centraliza a janela na tela
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            dialog.setX((primScreenBounds.getWidth() - dialog.getWidth()) / 2);
+            dialog.setY((primScreenBounds.getHeight() - dialog.getHeight()) / 2);
         }
     }
 
@@ -298,4 +336,8 @@ public class FXMLMainController implements Initializable {
     private void adminGera(ActionEvent event) {
     }
     
+    public void selecionaTab(int index) {
+        SingleSelectionModel<Tab> selectionModel = mainTabPane.getSelectionModel();
+        selectionModel.select(index);
+    }
 }

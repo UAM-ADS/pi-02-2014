@@ -65,7 +65,7 @@ public class Toronto extends Application {
         
         conn.close();
         
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/FXMLLogin.fxml"));
         
         Scene scene = new Scene(root);
         

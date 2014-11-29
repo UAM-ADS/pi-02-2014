@@ -22,6 +22,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.sql.*;
+import javafx.event.EventHandler;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.stage.WindowEvent;
 import toronto.utils.Constants;
 import toronto.utils.Crypto;
 
@@ -40,7 +43,6 @@ public class FXMLLoginController implements Initializable {
     @FXML
     private Label loginErro;
 
-
     /**
      * Initializes the controller class.
      */
@@ -58,13 +60,28 @@ public class FXMLLoginController implements Initializable {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, loginEmail.getText());
         ResultSet rs = stmt.executeQuery();
-        conn.close();
+//        conn.close();
         if (!rs.next() || !rs.getString("senha").equals(Crypto.md5String(loginSenha.getText()))) {
             loginErro.setVisible(true);
         } else {
-            Scene scene = new Scene((Parent)FXMLLoader.load(getClass().getResource("FXMLMain.fxml")));
+            URL location = getClass().getResource("FXMLMain.fxml");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(location);
+            loader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent main = (Parent) loader.load(location.openStream());
+            Scene scene = new Scene(main);
             Stage stage = (Stage) loginOk.getScene().getWindow();
             stage.setScene(scene);
+            final FXMLMainController controller = (FXMLMainController)loader.getController();
+            controller.initParams();
+//            stage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>()
+//            {
+//                @Override
+//                public void handle(WindowEvent window)
+//                {
+//                    controller.initParams();
+//                }
+//            });
             stage.show();
             
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();

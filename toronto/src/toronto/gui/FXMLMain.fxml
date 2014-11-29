@@ -42,7 +42,7 @@
       </AnchorPane>
    </top>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="mainTabPane" prefHeight="200.0" prefWidth="200.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab text="Venda">
             <content>
@@ -220,6 +220,11 @@
                               <TextField fx:id="clienteEmailTextField" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                               <TextField fx:id="clienteTelTextField" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                               <Button fx:id="clienteSalvaBtn" mnemonicParsing="false" onAction="#clienteSalva" text="Salvar" GridPane.columnIndex="10" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
+                              <Label fx:id="clienteCPFInvalidoLabel" text="CPF inválido!" textFill="#a81e1e" visible="false" GridPane.columnIndex="9" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </GridPane>
                      </children>
