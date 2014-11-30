@@ -18,7 +18,8 @@ public class Erros {
         ALERTA_CPF_INVALIDO("O CPF informado é inválido!"),
         ALERTA_PRODUTO_INEXISTENTE("O produto informado não está cadastrado"),
         ALERTA_PRODUTO_FORA_ESTOQUE("Não existe o produto em estoque..."),
-        ALERTA_SENHA_NAO_CONFERE("As senhas não conferem...");
+        ALERTA_SENHA_NAO_CONFERE("As senhas não conferem..."),
+        ALERTA_CARRINHO_VAZIO("Não há produto no carrinho de compras...");
         
         private String valor;
         

@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 import toronto.exceptions.*;
 import toronto.Produto;
 import toronto.Cliente;
+import toronto.utils.Constants;
 
 public class FrenteCaixa {
     private static FrenteCaixa caixa = null;
@@ -17,12 +20,13 @@ public class FrenteCaixa {
     
     private Pedido pedido;
     private Cliente cliente;
+//    private Map<Integer, Integer> quantidades;
     
     private FrenteCaixa() {
+//        quantidades = new HashMap<>();
     }
     
     public static FrenteCaixa getCaixa(Connection c) {
-        System.out.print(c);
         if (c == null) {
             throw new IllegalArgumentException("Conexão com banco de dados inválida.");
         }
@@ -44,12 +48,15 @@ public class FrenteCaixa {
     
     private void geraPedido() {
         pedido = new Pedido(conn);
-        pedido.data = new Date();
+        pedido.data = new Date(System.currentTimeMillis());
         pedido.valor = 0.0f;
         pedido.cliente = cliente;
     }
     
-    public Produto verificaProduto(int id) throws SQLException, ProdutoInexistenteException, ProdutoForaDeEstoqueException {
+    public Produto verificaProduto(int id, int quantidade) throws SQLException, ProdutoInexistenteException, ProdutoForaDeEstoqueException {
+        if (pedido == null) {
+            geraPedido();
+        }
         Produto produto;
         String sql = "SELECT * FROM produto WHERE cod_produto=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -57,12 +64,14 @@ public class FrenteCaixa {
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {    // Produto encontrado no BD
             // Verifica se o produto está em estoque
-            if (gerEstoque.quantidadeProduto(id) > 0) {
+            int qtdTotal = (pedido.quantidades.containsKey(id)?pedido.quantidades.get(id):0) + quantidade;
+            if (gerEstoque.quantidadeProduto(id) >= qtdTotal) {
                 produto = new Produto(conn);
                 produto.codigo = rs.getInt("cod_produto");
                 produto.nome = rs.getString("nome");
                 produto.descricao = rs.getString("descricao");
                 produto.preco = rs.getFloat("preco");
+                pedido.quantidades.put(id, (pedido.quantidades.containsKey(id)?pedido.quantidades.get(id):0)+quantidade);
             } else {
                 throw new ProdutoForaDeEstoqueException("Produto fora de estoque");
             }
@@ -72,11 +81,11 @@ public class FrenteCaixa {
         return produto;
     }
     
-    public void adicionaProdutoPedido(Produto produto) {
+    public void adicionaProdutoPedido(Produto produto, int quantidade) {
         if (pedido == null) {
             geraPedido();
         }
-        pedido.addicionaProduto(produto);
+        pedido.addicionaProduto(produto, quantidade);
     }
     
     public ArrayList<Produto> getProdutosPedido() {
@@ -87,14 +96,25 @@ public class FrenteCaixa {
         return pedido.valor;
     }
 
-    public Boolean fechaCompra() {
-        pedido = null;
-        cliente = null;
-        return true;
+    public NotaFiscal fechaCompra() {
+        pedido.salva();
+        gerEstoque.consolidaEstoque(pedido);
+        return emiteNotaFiscal();
     }
 
-    public Boolean emiteNotaFiscal() {
-        return null;
+    private NotaFiscal emiteNotaFiscal() {
+        NotaFiscal nf = new NotaFiscal(conn);
+        nf.pedido = pedido;
+        nf.valor = pedido.valor;
+        nf.imposto = Constants.IMPOSTOS;
+        try {
+            nf.salva();
+        } catch (SQLException e) {
+            nf = null;
+        }
+        pedido = null;
+        cliente = null;
+        return nf;
     }
     
     public void setConnection(Connection c) {

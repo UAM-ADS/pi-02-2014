@@ -11,7 +11,7 @@ import java.util.List;
 public class Constants {
     public enum Versao {
         MAJOR('0'),
-        MINOR('1'),
+        MINOR('7'),
         FIX('0');
         private char valor;
         
@@ -46,6 +46,8 @@ public class Constants {
     // Configurações do banco de dados local
     public static final String JDBC_DRIVER = "org.h2.Driver";
     public static final String DB_URL = "jdbc:h2:~/.toronto/toronto.db";
+    
+    public static final float IMPOSTOS = 0.2446f;
     
     public enum ProdutoAttr {
         NOME,

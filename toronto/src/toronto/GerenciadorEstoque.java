@@ -30,7 +30,6 @@ public class GerenciadorEstoque {
     }
     
     public void atualizaProdutoEstoque(int cod_produto, int quantidade) throws SQLException {
-        System.out.println("Quantidade: "+quantidade);
         String sql = "UPDATE estoque SET quantidade=? WHERE cod_produto=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, quantidade);
@@ -48,6 +47,30 @@ public class GerenciadorEstoque {
         } else {
             throw new ProdutoInexistenteException("Produto não encontrado no banco de dados");
         }
+    }
+    
+    public Boolean consolidaEstoque(Pedido pedido) {
+        for (Produto p : pedido.produtos) {
+            try {
+                String sql = "SELECT quantidade FROM estoque WHERE cod_produto=?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setInt(1, p.codigo);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int quantidade = rs.getInt("quantidade");
+                    sql = "UPDATE estoque SET quantidade=? WHERE cod_produto=?";
+                    stmt = conn.prepareStatement(sql);
+                    stmt.setInt(1, quantidade-(pedido.quantidades.containsKey(p.codigo)?pedido.quantidades.get(p.codigo):0));
+                    stmt.setInt(2, p.codigo);
+                    stmt.executeUpdate();
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

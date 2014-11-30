@@ -103,18 +103,18 @@
                                        </VBox.margin>
                                        <children>
                                           <Label text="Cód. Produto:" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
-                                          <TextField fx:id="vendaCodProdTextField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+                                          <TextField fx:id="vendaCodProdTextField" onAction="#vendaInsereProd" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
                                           <Label text="Quantidade:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                          <TextField fx:id="vendaQtdProdTextField" text="1" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                          <TextField fx:id="vendaQtdProdTextField" onAction="#vendaInsereProd" text="1" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                           <Button fx:id="vendaInserirProdBtn" mnemonicParsing="false" onAction="#vendaInsereProd" text="Inserir" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
                                     <TableView fx:id="vendaProdTableView" prefHeight="360.0" prefWidth="447.0">
                                       <columns>
-                                        <TableColumn fx:id="vendaCodColumn" editable="false" prefWidth="75.0" sortable="false" text="cód" />
-                                        <TableColumn fx:id="vendaNomeColumn" editable="false" prefWidth="224.0" sortable="false" text="nome" />
-                                          <TableColumn fx:id="vendaQtdColumn" editable="false" prefWidth="75.0" sortable="false" text="qtd" />
-                                          <TableColumn fx:id="vendaPrecoColumn" editable="false" prefWidth="75.0" sortable="false" text="preço" />
+                                        <TableColumn fx:id="vendaCodColumn" editable="false" prefWidth="105.0" sortable="false" text="cód" />
+                                        <TableColumn fx:id="vendaNomeColumn" editable="false" prefWidth="401.0" sortable="false" text="nome" />
+                                          <TableColumn fx:id="vendaQtdColumn" editable="false" prefWidth="94.0" sortable="false" text="qtd" />
+                                          <TableColumn fx:id="vendaPrecoColumn" editable="false" prefWidth="146.0" sortable="false" text="preço" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets top="5.0" />
@@ -141,17 +141,6 @@
                                  </children>
                               </VBox>
                            </center>
-                           <right>
-                              <VBox prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding>
-                                 <children>
-                                    <Label text="Cupom Fiscal:" />
-                                    <TextArea fx:id="vendaNFTextView" editable="false" prefHeight="460.0" prefWidth="290.0" />
-                                 </children>
-                              </VBox>
-                           </right>
                         </BorderPane>
                      </children>
                   </AnchorPane>

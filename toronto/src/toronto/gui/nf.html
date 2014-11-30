@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>NOTA FISCAL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            body {
+                font-family: 'Fake Receipt';
+                background-color: #faeeb1;
+            }
+            .barra {
+                line-height: .1rem;
+            }
+            .barra .numero {
+                font-size: 0.6rem;
+            }
+            .header {
+                font-size: 0.7rem;
+                text-align: center;
+            }
+            .divisor {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            .nf {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            .content .prod {
+                width: 100%;
+            }
+            .content .prod th {
+                font-size: 0.6rem;
+                font-weight: bold;
+            }
+            .content .prod td {
+                font-size: 0.6rem;
+            }
+            .tributos {
+                font-size: 0.5rem;
+            }
+            .creditos {
+                font-size: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <p class="header">LOJA DE VAREJO
+            <br/>R. DAS ACÁCIAS, 1001
+            <br/>VILA UM - SÂO PAULO, SP
+            <br/>CNPJ:12.345.678/0001-12</p>
+        <div class="barra">
+            <p class="numero">no:{{ num_nf }}</p>
+            <p class="divisor">-----------------------------------------------------------------</p>
+            <p class="nf">CUPOM FISCAL</p>
+            <p class="divisor">-----------------------------------------------------------------</p>
+        </div>
+        <div class="content">
+            <table class="prod">
+                <tr>
+                    <th>cod</th>
+                    <th>nome</th>
+                    <th>qtd</th>
+                    <th>vl</th>
+                </tr>
+                {{ prods }}
+            </table>
+        </div>
+        <div class="barra">
+            <p class="divisor">-----------------------------------------------------------------</p>
+        </div>
+        <div class="tributos">
+            <p>Tributos aprox: {{ imp_total }} ({{ imp_perc }}%) Fonte: IBPT</p>
+        </div>
+        <div class="creditos">
+            <p><strong>EQUIPE CANADÁ</strong> - Sistema Toronto versão {{ versao }}</p>
+        </div>
+        <br>
+    </body>
+</html>

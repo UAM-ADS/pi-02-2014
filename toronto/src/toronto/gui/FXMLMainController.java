@@ -31,6 +31,7 @@ import javafx.scene.control.Tab;
 
 import java.sql.*;
 import java.text.ParseException;
+import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -56,6 +57,7 @@ import toronto.Cliente;
 import toronto.FrenteCaixa;
 import toronto.GerenciadorEstoque;
 import toronto.GerenciadorFinanceiro;
+import toronto.NotaFiscal;
 import toronto.Produto;
 import toronto.exceptions.*;
 import toronto.gui.ProdutoRow;
@@ -411,17 +413,21 @@ public class FXMLMainController implements Initializable {
     private void vendaInsereProd(ActionEvent event) throws SQLException, IOException {
         // Busca o produto no banco de dados
         try {
-            Produto produto = caixa.verificaProduto(Integer.parseInt(vendaCodProdTextField.getText()));
+            int codigo = Integer.parseInt(vendaCodProdTextField.getText());
+            int quantidade = Integer.parseInt(vendaQtdProdTextField.getText());
+            Produto produto = caixa.verificaProduto(codigo, quantidade);
             if (produto != null) {
-                caixa.adicionaProdutoPedido(produto);
+                caixa.adicionaProdutoPedido(produto, quantidade);
                 // Atualiza valor da compra
                 atualizaTotal(caixa.getValorPedido());
                 // Atualiza tabela de produtos
                 vendaProdutoList.add(new ProdutoRow(produto.codigo,
-                                               produto.nome,
-                                               produto.descricao,
-                                               Integer.parseInt(vendaQtdProdTextField.getText()),
-                                               produto.preco));
+                                            produto.nome,
+                                            produto.descricao,
+                                            Integer.parseInt(vendaQtdProdTextField.getText()),
+                                            produto.preco));
+                vendaCodProdTextField.clear();
+                vendaQtdProdTextField.setText("1");
             }
         } catch (ProdutoInexistenteException e) {
             // Exibe alerta avisando que o produto não está cadastrado
@@ -440,11 +446,61 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void vendaFinaliza(ActionEvent event) {
-        caixa.fechaCompra();
-//        String textoNF = caixa.emiteNotaFiscal();
-        clienteAtual = null;
-        vendaProdutoList.clear();
+    private void vendaFinaliza(ActionEvent event) throws IOException {
+        if (vendaProdutoList.size() > 0) {  // Se tiver produto na lista
+            String html = new Scanner(this.getClass().getResourceAsStream("nf.html"), "UTF-8").useDelimiter("\\A").next();
+            NotaFiscal nf = caixa.fechaCompra();
+            // Substitui tags no html
+            String pattNumNF = "(\\{\\{\\s*(num_nf)\\s*\\}\\})";
+            String pattProds = "(\\{\\{\\s*(prods)\\s*\\}\\})";
+            String pattImposto = "(\\{\\{\\s*(imp_total)\\s*\\}\\})";
+            String pattImpPerc = "(\\{\\{\\s*(imp_perc)\\s*\\}\\})";
+            String pattVersao = "(\\{\\{\\s*(versao)\\s*\\}\\})";
+            String prods = "";
+            System.out.println(nf);
+            for (Produto p : nf.pedido.produtos) {
+                prods += String.format("<tr><th>%d</th><th>%s</th><th>%d</th><th>%.2f</th></tr>\n",
+                        p.codigo,
+                        p.nome,
+                        nf.pedido.quantidades.get(p.codigo),
+                        p.preco*nf.pedido.quantidades.get(p.codigo));
+            }
+            html = html.replaceAll(pattNumNF, String.format("%06d", nf.numero));
+            html = html.replaceAll(pattProds, prods);
+            html = html.replaceAll(pattImposto, String.format("%.2f", nf.valor*Constants.IMPOSTOS));
+            html = html.replaceAll(pattImpPerc, String.format("%.2f", 100*Constants.IMPOSTOS));
+            html = html.replaceAll(pattVersao, Versao.full());
+            mostraNF(html);
+            clienteAtual = null;
+            vendaProdutoList.clear();
+            initParams(user);
+        } else {    // Lista de compra vazia
+            // Mostra diálogo alertando sobre lista vazia
+            mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_CARRINHO_VAZIO));
+        }
+        
+    }
+    
+    private Boolean mostraNF(String url) {
+        try {
+            URL location = getClass().getResource("FXMLCupomFiscal.fxml");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(location);
+            loader.setBuilderFactory(new JavaFXBuilderFactory());
+            Scene dialogScene = new Scene((Parent)loader.load(location.openStream()));
+            // Inicia a cena da caixa de diálogo
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(root);
+            dialog.setScene(dialogScene);
+            FXMLCupomFiscalController controller = (FXMLCupomFiscalController)loader.getController();
+            controller.initParams(url);
+            dialog.centerOnScreen();
+            dialog.show();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -624,10 +680,8 @@ public class FXMLMainController implements Initializable {
         stmt.setString(2, "%"+estoqueBuscaTextField.getText()+"%");
         stmt.setString(3, "%"+estoqueBuscaTextField.getText()+"%");
         ResultSet rs = stmt.executeQuery();
-        System.out.println(rs);
         // Insere os resultados na tabela
         while (rs.next()) {
-            System.out.println(rs.getString("nome"));
             estoqueProdutoList.add(new ProdutoRow(rs.getInt("cod_produto"),
                                                   rs.getString("nome"),
                                                   rs.getString("descricao"),

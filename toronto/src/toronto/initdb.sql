@@ -32,7 +32,9 @@ status varchar(64),
 data date DEFAULT CURRENT_DATE(),
 forma_pag varchar(64),
 valor real,
-num_nf bigint
+num_nf bigint,
+cliente_id varchar(24),
+FOREIGN KEY(cliente_id) REFERENCES Cliente (cpf)
 );
 
 CREATE TABLE IF NOT EXISTS Produto (
