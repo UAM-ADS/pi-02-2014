@@ -47,6 +47,7 @@ import toronto.Cliente;
 import toronto.FrenteCaixa;
 import toronto.GerenciadorEstoque;
 import toronto.GerenciadorFinanceiro;
+import toronto.Produto;
 
 /**
  * FXML Controller class
@@ -269,11 +270,19 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void vendaInsereProd(ActionEvent event) throws SQLException {
+    private void vendaInsereProd(ActionEvent event) throws SQLException, IOException {
         // Busca o produto no banco de dados
-        String sql = "SELECT * FROM produto WHERE produto_id=?";
+        String sql = "SELECT * FROM produto WHERE cod_produto=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        //caixa.adicionaProdutoPedido();
+        stmt.setInt(1, Integer.parseInt(vendaCodProdTextField.getText()));
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {    // Produto encontrado no BD
+            // TODO
+            //caixa.adicionaProdutoPedido();
+        } else {    // Produto não encontrado
+            // Exibe alerta avisando que o produto não está cadastrado
+            mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_PRODUTO_INEXISTENTE));
+        }
     }
 
     /**
@@ -363,20 +372,7 @@ public class FXMLMainController implements Initializable {
             if (!Cliente.validaCPF(cpf)) {   // CPF inválido
                 clienteCPFOkLabel.setVisible(false);
                 // Apresenta a modal de CPF inválido
-                URL location = getClass().getResource("FXMLCPFInvalidoModal.fxml");
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(location);
-                loader.setBuilderFactory(new JavaFXBuilderFactory());
-                Scene dialogScene = new Scene((Parent)loader.load(location.openStream()));
-                // Inicia a cena da caixa de diálogo
-                Stage dialog = new Stage();
-                dialog.initModality(Modality.WINDOW_MODAL);
-                dialog.initOwner(root);
-                dialog.setScene(dialogScene);
-                FXMLAlertaModalController controller = (FXMLAlertaModalController)loader.getController();
-                controller.initParams(ErroMsg.msg(ErroMsg.ALERTA_CPF_INVALIDO));
-                dialog.centerOnScreen();
-                dialog.show();
+                mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_CPF_INVALIDO));
             } else {
                 clienteCPFOkLabel.setVisible(true);
             }
@@ -428,7 +424,22 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void prodSalva(ActionEvent event) {
+    private void prodSalva(ActionEvent event) throws IOException {
+        // Cria o produto
+        float preco = Float.parseFloat(prodPrecoTextField.getText().replaceAll("\\w+\\$\\s?", "").replace(',', '.'));
+        Produto produto = new Produto(conn);
+        produto.nome = prodNomeTextField.getText();
+        produto.descricao = prodDescTextArea.getText();
+        produto.preco = preco;
+        // Salva no banco de dados
+        if (!produto.salva()) {
+            mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_ACESSO_SQL));
+        } else {
+            // Limpa os campos
+            prodNomeTextField.setText("");
+            prodDescTextArea.setText("");
+            prodPrecoTextField.setText("");
+        }
     }
 
     /**
@@ -466,6 +477,23 @@ public class FXMLMainController implements Initializable {
      */
     @FXML
     private void adminGera(ActionEvent event) {
+    }
+    
+    private void mostraAlerta(String msg) throws IOException {
+        URL location = getClass().getResource("FXMLAlertaModal.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(location);
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        Scene dialogScene = new Scene((Parent)loader.load(location.openStream()));
+        // Inicia a cena da caixa de diálogo
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initOwner(root);
+        dialog.setScene(dialogScene);
+        FXMLAlertaModalController controller = (FXMLAlertaModalController)loader.getController();
+        controller.initParams(msg);
+        dialog.centerOnScreen();
+        dialog.show();
     }
     
     private String formataCPF(String cpf) throws ParseException {
