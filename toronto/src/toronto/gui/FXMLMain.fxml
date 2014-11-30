@@ -44,7 +44,7 @@
    <center>
       <TabPane fx:id="mainTabPane" prefHeight="200.0" prefWidth="200.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Venda">
+          <Tab fx:id="tabVenda" text="Venda">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -157,7 +157,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="clienteTab" text="Cliente">
+          <Tab fx:id="tabCliente" text="Cliente">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -238,7 +238,7 @@
                      </padding></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Produto">
+            <Tab fx:id="tabProduto" text="Produto">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -294,7 +294,7 @@
                      </padding></AnchorPane>
               </content>
             </Tab>
-            <Tab text="Estoque">
+            <Tab fx:id="tabEstoque" text="Estoque">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -356,7 +356,7 @@
                      </padding></AnchorPane>
               </content>
             </Tab>
-            <Tab text="Funcionário">
+            <Tab fx:id="tabFuncionario" text="Funcionário">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <padding>
@@ -405,14 +405,14 @@
                               <Label text="Login:" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                               <TextField fx:id="funcLoginTextField" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="4" />
                               <Label text="Senha:" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                              <PasswordField fx:id="funcSenhaTextField" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="4" />
+                              <PasswordField fx:id="funcSenhaTextField" onKeyReleased="#funcSenhaKeyPressed" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="4" />
                               <Label text="Salário (R$):" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                               <TextField fx:id="funcSalarioTextField" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" />
                               <Label text="Confirmar senha:" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                              <PasswordField fx:id="funcSenhaConfTextBox" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="5" />
+                              <PasswordField fx:id="funcSenhaConfTextBox" onKeyReleased="#funcSenhaKeyPressed" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="5" />
                               <Label text="Gerente:" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                               <CheckBox fx:id="funcAdminCheckBox" mnemonicParsing="false" text="Sim" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                              <Label fx:id="funcSenhaAlertaLabel" text="Senhas não conferem" textFill="#a81e1e" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="6">
+                              <Label fx:id="funcSenhaAlertaLabel" text="Senhas não conferem" textFill="#a81e1e" visible="false" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="6">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -423,7 +423,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab text="Admin">
+            <Tab fx:id="tabAdmin" text="Admin">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <padding>
@@ -477,7 +477,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab text="Sobre">
+            <Tab fx:id="tabSobre" text="Sobre">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

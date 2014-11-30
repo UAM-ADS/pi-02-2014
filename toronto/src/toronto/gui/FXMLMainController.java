@@ -37,6 +37,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyEvent;
 import javax.swing.text.MaskFormatter;
 import toronto.utils.Constants;
 import toronto.utils.Constants.Versao;
@@ -77,10 +78,6 @@ public class FXMLMainController implements Initializable {
     private Label vendaNomeClienteLabel;
     @FXML
     private Label vendaTotalLabel;
-    @FXML
-    private TabPane mainTabPane;
-    @FXML
-    private Tab clienteTab;
     @FXML
     private TextField clienteCPFTextField;
     @FXML
@@ -151,6 +148,22 @@ public class FXMLMainController implements Initializable {
     private Label headerVersaoLabel;
     @FXML
     private Label headerOlaLabel;
+    @FXML
+    private TabPane mainTabPane;
+    @FXML
+    private Tab tabVenda;
+    @FXML
+    private Tab tabCliente;
+    @FXML
+    private Tab tabProduto;
+    @FXML
+    private Tab tabEstoque;
+    @FXML
+    private Tab tabFuncionario;
+    @FXML
+    private Tab tabAdmin;
+    @FXML
+    private Tab tabSobre;
     
     private static Stage root;
     private static Connection conn;
@@ -214,6 +227,14 @@ public class FXMLMainController implements Initializable {
                     }
                 }
             }
+        }
+        // Verifica as permissões do usuário
+        if (!user.admin) {
+            // Desabilita as funcionalidades de administrador
+            mainTabPane.getTabs().remove(tabProduto);
+            mainTabPane.getTabs().remove(tabEstoque);
+            mainTabPane.getTabs().remove(tabFuncionario);
+            mainTabPane.getTabs().remove(tabAdmin);
         }
         
         // Atualiza o nome do usuário logado
@@ -460,6 +481,20 @@ public class FXMLMainController implements Initializable {
     @FXML
     private void estoqueSalva(ActionEvent event) {
     }
+    
+    /**
+     * Verifica se as senhas conferem
+     * 
+     * @param event 
+     */
+    @FXML
+    private void funcSenhaKeyPressed(KeyEvent event) {
+        if (funcSenhaTextField.getText().equals(funcSenhaConfTextBox.getText())) {
+            funcSenhaAlertaLabel.setVisible(false);
+        } else {
+            funcSenhaAlertaLabel.setVisible(true);
+        }
+    }
 
     /**
      * Salva os dados do novo funcionário no banco de dados
@@ -467,7 +502,31 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void funcSalva(ActionEvent event) {
+    private void funcSalva(ActionEvent event) throws IOException {
+        // Checa se as senhas conferem
+        if (funcSenhaTextField.getText().equals(funcSenhaConfTextBox.getText())) { // Senhas conferem
+            // Cria o funcionário
+            float salario = Float.parseFloat(funcSalarioTextField.getText().replaceAll("\\w+\\$\\s?", "").replace(',', '.'));
+            Usuario funcionario = new Usuario(conn);
+            funcionario.nome = funcNomeTextField.getText();
+            funcionario.login = funcLoginTextField.getText();
+            funcionario.senha = funcSenhaTextField.getText();
+            funcionario.admin = funcAdminCheckBox.selectedProperty().getValue();
+            funcionario.salario = salario;
+            // Salva no banco de dados
+            if (!funcionario.salva()) {
+                mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_ACESSO_SQL));
+            } else {
+                // Limpa os campos
+                funcNomeTextField.setText("");
+                funcLoginTextField.setText("");
+                funcSenhaTextField.setText("");
+                funcSenhaConfTextBox.setText("");
+                funcAdminCheckBox.selectedProperty().setValue(Boolean.FALSE);
+            }
+        } else { // Senhas não conferem
+            mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_SENHA_NAO_CONFERE));
+        }
     }
 
     /**
@@ -514,4 +573,5 @@ public class FXMLMainController implements Initializable {
     public void atualizaTotal(float valor) {
         vendaTotalLabel.setText(String.format("R$ %.2f", valor));
     }
+
 }

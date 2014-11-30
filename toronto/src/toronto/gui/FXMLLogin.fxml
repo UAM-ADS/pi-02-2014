@@ -40,7 +40,7 @@
       <Label text="Login:" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
       <TextField fx:id="loginEmail" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
       <Label text="Senha:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-      <PasswordField fx:id="loginSenha" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+      <PasswordField fx:id="loginSenha" onAction="#verificaLogin" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4" />
       <Button fx:id="loginOk" mnemonicParsing="false" onAction="#verificaLogin" text="Ok" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <Label fx:id="loginErro" text="Usuário ou senha inválidos!" textFill="#a81e1e" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
          <font>

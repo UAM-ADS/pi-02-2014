@@ -65,7 +65,7 @@ public class FXMLLoginController implements Initializable {
         if (!rs.next() || !rs.getString("senha").equals(Crypto.md5String(loginSenha.getText()))) {
             loginErro.setVisible(true);
         } else {
-            Usuario user = new Usuario();
+            Usuario user = new Usuario(conn);
             user.nome = rs.getString("nome");
             user.login = rs.getString("login");
             user.salario = rs.getFloat("salario");
