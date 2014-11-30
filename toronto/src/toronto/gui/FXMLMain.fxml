@@ -105,16 +105,16 @@
                                           <Label text="Cód. Produto:" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
                                           <TextField fx:id="vendaCodProdTextField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
                                           <Label text="Quantidade:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                          <TextField fx:id="vendaQtdProdTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                          <TextField fx:id="vendaQtdProdTextField" text="1" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                           <Button fx:id="vendaInserirProdBtn" mnemonicParsing="false" onAction="#vendaInsereProd" text="Inserir" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
                                     <TableView fx:id="vendaProdTableView" prefHeight="360.0" prefWidth="447.0">
                                       <columns>
-                                        <TableColumn editable="false" prefWidth="75.0" sortable="false" text="cód" />
-                                        <TableColumn editable="false" prefWidth="224.0" sortable="false" text="descrição" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="qtd" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="preço" />
+                                        <TableColumn fx:id="vendaCodColumn" editable="false" prefWidth="75.0" sortable="false" text="cód" />
+                                        <TableColumn fx:id="vendaNomeColumn" editable="false" prefWidth="224.0" sortable="false" text="nome" />
+                                          <TableColumn fx:id="vendaQtdColumn" editable="false" prefWidth="75.0" sortable="false" text="qtd" />
+                                          <TableColumn fx:id="vendaPrecoColumn" editable="false" prefWidth="75.0" sortable="false" text="preço" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets top="5.0" />
@@ -340,11 +340,11 @@
                               <Label text="Resultados:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
                               <TableView fx:id="estoqueTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="11" GridPane.rowIndex="4" GridPane.rowSpan="6">
                                 <columns>
-                                  <TableColumn editable="false" prefWidth="75.0" text="cód" />
-                                  <TableColumn prefWidth="99.0" text="nome" />
-                                    <TableColumn prefWidth="324.0" text="descrição" />
-                                    <TableColumn prefWidth="42.0" text="qtd" />
-                                    <TableColumn prefWidth="89.0" text="preço (R$)" />
+                                  <TableColumn fx:id="estoqueCodColumn" editable="false" prefWidth="75.0" text="cód" />
+                                  <TableColumn fx:id="estoqueNomeColumn" prefWidth="99.0" text="nome" />
+                                    <TableColumn fx:id="estoqueDescColumn" prefWidth="324.0" text="descrição" />
+                                    <TableColumn fx:id="estoqueQtdColumn" prefWidth="42.0" text="qtd" />
+                                    <TableColumn fx:id="estoquePrecoColumn" prefWidth="89.0" text="preço (R$)" />
                                 </columns>
                               </TableView>
                               <Button fx:id="estoqueSalvaBtn" mnemonicParsing="false" onAction="#estoqueSalva" text="Salvar" GridPane.columnIndex="10" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />

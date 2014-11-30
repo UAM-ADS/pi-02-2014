@@ -20,6 +20,7 @@ public class Pedido {
     
     public void addicionaProduto(Produto produto) {
         produtos.add(produto);
+        valor += produto.preco;
     }
 
     public Boolean salva() {

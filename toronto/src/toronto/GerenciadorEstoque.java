@@ -1,7 +1,25 @@
 package toronto;
 
-public enum GerenciadorEstoque {
-    gerenciador;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import toronto.exceptions.ProdutoInexistenteException;
+
+public class GerenciadorEstoque {
+    private static GerenciadorEstoque gerenciador;
+    private static Connection conn;
+    
+    private GerenciadorEstoque(Connection c) {
+        this.conn = c;
+    }
+    
+    public static GerenciadorEstoque gerenciador(Connection c) {
+        if (gerenciador == null) {
+            gerenciador = new GerenciadorEstoque(c);
+        }
+        return gerenciador;
+    }
 
     public Boolean acrescentaProduto(Produto produto) {
         return null;
@@ -11,8 +29,16 @@ public enum GerenciadorEstoque {
         return null;
     }
 
-    public int quantidadeProduto(Produto produto) {
-        return 0;
+    public int quantidadeProduto(int id) throws SQLException, ProdutoInexistenteException {
+        String sql = "SELECT quantidade FROM estoque WHERE cod_produto=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("quantidade");
+        } else {
+            throw new ProdutoInexistenteException("Produto não encontrado no banco de dados");
+        }
     }
 
 }

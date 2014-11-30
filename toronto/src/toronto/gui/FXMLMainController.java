@@ -37,6 +37,8 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javax.swing.text.MaskFormatter;
 import toronto.utils.Constants;
@@ -49,6 +51,8 @@ import toronto.FrenteCaixa;
 import toronto.GerenciadorEstoque;
 import toronto.GerenciadorFinanceiro;
 import toronto.Produto;
+import toronto.exceptions.*;
+import toronto.gui.ProdutoRow;
 
 /**
  * FXML Controller class
@@ -65,7 +69,7 @@ public class FXMLMainController implements Initializable {
     @FXML
     private Button vendaInserirProdBtn;
     @FXML
-    private TableView<?> vendaProdTableView;
+    private TableView<ProdutoRow> vendaProdTableView;
     @FXML
     private Button vendaFinalizarBtn;
     @FXML
@@ -119,7 +123,7 @@ public class FXMLMainController implements Initializable {
     @FXML
     private Button estoqueBuscaBtn;
     @FXML
-    private TableView<?> estoqueTableView;
+    private TableView<ProdutoRow> estoqueTableView;
     @FXML
     private Button estoqueSalvaBtn;
     @FXML
@@ -164,6 +168,24 @@ public class FXMLMainController implements Initializable {
     private Tab tabAdmin;
     @FXML
     private Tab tabSobre;
+    @FXML
+    private TableColumn<ProdutoRow, Integer> vendaCodColumn;
+    @FXML
+    private TableColumn<ProdutoRow, String> vendaNomeColumn;
+    @FXML
+    private TableColumn<ProdutoRow, Integer> vendaQtdColumn;
+    @FXML
+    private TableColumn<ProdutoRow, Float> vendaPrecoColumn;
+    @FXML
+    private TableColumn<ProdutoRow, Integer> estoqueCodColumn;
+    @FXML
+    private TableColumn<ProdutoRow, String> estoqueNomeColumn;
+    @FXML
+    private TableColumn<ProdutoRow, String> estoqueDescColumn;
+    @FXML
+    private TableColumn<ProdutoRow, Integer> estoqueQtdColumn;
+    @FXML
+    private TableColumn<ProdutoRow, Float> estoquePrecoColumn;
     
     private static Stage root;
     private static Connection conn;
@@ -172,6 +194,8 @@ public class FXMLMainController implements Initializable {
     private static FrenteCaixa caixa;
     private static GerenciadorEstoque gerEstoque;
     private static GerenciadorFinanceiro gerFinanceiro;
+    private static ObservableList<ProdutoRow> vendaProdutoList;
+    private static ObservableList<ProdutoRow> estoqueProdutoList;
     
 
     /**
@@ -181,8 +205,43 @@ public class FXMLMainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Referência aos singletons gerenciadores
-        gerEstoque = GerenciadorEstoque.gerenciador;
+        gerEstoque = GerenciadorEstoque.gerenciador(conn);
         gerFinanceiro = GerenciadorFinanceiro.gerenciador;
+        
+        // Configura tabela de produtos na venda
+        vendaCodColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Integer>("codigo")
+        );
+        vendaNomeColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, String>("nome")
+        );
+        vendaQtdColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Integer>("quantidade")
+        );
+        vendaPrecoColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Float>("preco")
+        );
+        vendaProdutoList = FXCollections.observableArrayList();
+        vendaProdTableView.setItems(vendaProdutoList);
+        
+        // Configura tabela de produtos em estoque
+        estoqueCodColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Integer>("codigo")
+        );
+        estoqueNomeColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, String>("nome")
+        );
+        estoqueDescColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, String>("descricao")
+        );
+        estoqueQtdColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Integer>("quantidade")
+        );
+        estoquePrecoColumn.setCellValueFactory(
+                new PropertyValueFactory<ProdutoRow, Float>("preco")
+        );
+        estoqueProdutoList = FXCollections.observableArrayList();
+        estoqueTableView.setItems(estoqueProdutoList);
     }
     
     public void initParams(Usuario u) {
@@ -261,6 +320,7 @@ public class FXMLMainController implements Initializable {
         if (caixa == null) {
             caixa = FrenteCaixa.getCaixa(conn);
         }
+        caixa.setCliente(clienteAtual);
         
         // Zera o valor total
         atualizaTotal(0.0f);
@@ -293,17 +353,27 @@ public class FXMLMainController implements Initializable {
     @FXML
     private void vendaInsereProd(ActionEvent event) throws SQLException, IOException {
         // Busca o produto no banco de dados
-        String sql = "SELECT * FROM produto WHERE cod_produto=?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, Integer.parseInt(vendaCodProdTextField.getText()));
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {    // Produto encontrado no BD
-            // TODO
-            //caixa.adicionaProdutoPedido();
-        } else {    // Produto não encontrado
+        try {
+            Produto produto = caixa.verificaProduto(Integer.parseInt(vendaCodProdTextField.getText()));
+            if (produto != null) {
+                caixa.adicionaProdutoPedido(produto);
+                // Atualiza valor da compra
+                atualizaTotal(caixa.getValorPedido());
+                // Atualiza tabela de produtos
+                vendaProdutoList.add(new ProdutoRow(produto.codigo,
+                                               produto.nome,
+                                               produto.descricao,
+                                               Integer.parseInt(vendaQtdProdTextField.getText()),
+                                               produto.preco));
+            }
+        } catch (ProdutoInexistenteException e) {
             // Exibe alerta avisando que o produto não está cadastrado
             mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_PRODUTO_INEXISTENTE));
+        } catch (ProdutoForaDeEstoqueException e) {
+            // Exibe alerta avisando que o produto está fora de estoque
+            mostraAlerta(ErroMsg.msg(ErroMsg.ALERTA_PRODUTO_FORA_ESTOQUE));
         }
+        
     }
 
     /**
@@ -315,6 +385,7 @@ public class FXMLMainController implements Initializable {
     @FXML
     private void vendaFinaliza(ActionEvent event) {
         clienteAtual = null;
+        vendaProdutoList.clear();
     }
 
     /**

@@ -50,6 +50,13 @@ FOREIGN KEY(cod_produto) REFERENCES Produto (cod_produto),
 FOREIGN KEY(cod_pedido) REFERENCES Pedido (cod_pedido)
 );
 
+CREATE TABLE IF NOT EXISTS Estoque (
+estoque_id bigint PRIMARY KEY AUTO_INCREMENT,
+cod_produto bigint,
+quantidade int,
+FOREIGN KEY(cod_produto) REFERENCES Produto (cod_produto)
+);
+
 CREATE TABLE IF NOT EXISTS NotaFiscal (
 num_nf bigint PRIMARY KEY AUTO_INCREMENT,
 impostos real,
