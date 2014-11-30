@@ -26,9 +26,9 @@ import toronto.utils.Crypto;
  * @author Lorenna Borges
  * @custom.ra 20467242
  * @author Andressa Pinheiro Guerra
- * @custom.ra XXXXXXXX
+ * @custom.ra 20460231
  * @author Thiago Ribeiro Baptista
- * @custom.ra XXXXXXXX
+ * @custom.ra 20468075
  */
 public class Toronto extends Application {
     // Credenciais do usuário inicial
