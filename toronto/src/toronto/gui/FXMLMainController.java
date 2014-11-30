@@ -467,6 +467,7 @@ public class FXMLMainController implements Initializable {
             }
             html = html.replaceAll(pattNumNF, String.format("%06d", nf.numero));
             html = html.replaceAll(pattProds, prods);
+            
             html = html.replaceAll(pattImposto, String.format("%.2f", nf.valor*Constants.IMPOSTOS));
             html = html.replaceAll(pattImpPerc, String.format("%.2f", 100*Constants.IMPOSTOS));
             html = html.replaceAll(pattVersao, Versao.full());

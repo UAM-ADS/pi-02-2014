@@ -68,7 +68,7 @@ and open the template in the editor.
                     <th>cod</th>
                     <th>nome</th>
                     <th>qtd</th>
-                    <th>vl</th>
+                    <th>vl(R$)</th>
                 </tr>
                 {{ prods }}
             </table>
@@ -77,7 +77,7 @@ and open the template in the editor.
             <p class="divisor">-----------------------------------------------------------------</p>
         </div>
         <div class="tributos">
-            <p>Tributos aprox: {{ imp_total }} ({{ imp_perc }}%) Fonte: IBPT</p>
+            <p>Tributos aprox: R${{ imp_total }} ({{ imp_perc }}%) Fonte: IBPT</p>
         </div>
         <div class="creditos">
             <p><strong>EQUIPE CANADÁ</strong> - Sistema Toronto versão {{ versao }}</p>
