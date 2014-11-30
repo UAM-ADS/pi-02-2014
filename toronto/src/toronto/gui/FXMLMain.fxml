@@ -335,16 +335,16 @@
                                     <Font name="System Bold" size="28.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="estoqueBuscaTextField" promptText="Nome, descrição ou código" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="2" />
+                              <TextField fx:id="estoqueBuscaTextField" onAction="#estoqueBusca" promptText="Nome, descrição ou código" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="2" />
                               <Button fx:id="estoqueBuscaBtn" mnemonicParsing="false" onAction="#estoqueBusca" text="Buscar" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                               <Label text="Resultados:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
-                              <TableView fx:id="estoqueTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="11" GridPane.rowIndex="4" GridPane.rowSpan="6">
+                              <TableView fx:id="estoqueTableView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="11" GridPane.rowIndex="4" GridPane.rowSpan="6">
                                 <columns>
-                                  <TableColumn fx:id="estoqueCodColumn" editable="false" prefWidth="75.0" text="cód" />
-                                  <TableColumn fx:id="estoqueNomeColumn" prefWidth="99.0" text="nome" />
-                                    <TableColumn fx:id="estoqueDescColumn" prefWidth="324.0" text="descrição" />
-                                    <TableColumn fx:id="estoqueQtdColumn" prefWidth="42.0" text="qtd" />
-                                    <TableColumn fx:id="estoquePrecoColumn" prefWidth="89.0" text="preço (R$)" />
+                                  <TableColumn fx:id="estoqueCodColumn" editable="false" prefWidth="56.0" text="cód" />
+                                  <TableColumn fx:id="estoqueNomeColumn" prefWidth="132.0" text="nome" />
+                                    <TableColumn fx:id="estoqueDescColumn" prefWidth="293.0" text="descrição" />
+                                    <TableColumn fx:id="estoqueQtdColumn" prefWidth="50.0" text="qtd" />
+                                    <TableColumn fx:id="estoquePrecoColumn" prefWidth="98.0" text="preço (R$)" />
                                 </columns>
                               </TableView>
                               <Button fx:id="estoqueSalvaBtn" mnemonicParsing="false" onAction="#estoqueSalva" text="Salvar" GridPane.columnIndex="10" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
@@ -423,7 +423,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="tabAdmin" text="Admin">
+            <Tab fx:id="tabAdmin" disable="true" text="Admin">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <padding>

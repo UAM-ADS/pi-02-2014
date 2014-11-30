@@ -33,17 +33,23 @@ import java.sql.*;
 import java.text.ParseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
+import javafx.util.converter.FloatStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import javax.swing.text.MaskFormatter;
 import toronto.utils.Constants;
 import toronto.utils.Constants.Versao;
 import toronto.utils.Constants.TabIndex;
+import toronto.utils.Constants.ProdutoAttr;
 import toronto.utils.Erros.ErroMsg;
 import toronto.Usuario;
 import toronto.Cliente;
@@ -204,10 +210,6 @@ public class FXMLMainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Referência aos singletons gerenciadores
-        gerEstoque = GerenciadorEstoque.gerenciador(conn);
-        gerFinanceiro = GerenciadorFinanceiro.gerenciador;
-        
         // Configura tabela de produtos na venda
         vendaCodColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, Integer>("codigo")
@@ -225,21 +227,72 @@ public class FXMLMainController implements Initializable {
         vendaProdTableView.setItems(vendaProdutoList);
         
         // Configura tabela de produtos em estoque
+        estoqueTableView.setEditable(true);
+        
         estoqueCodColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, Integer>("codigo")
         );
+        
         estoqueNomeColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, String>("nome")
         );
+        estoqueNomeColumn.setCellFactory(TextFieldTableCell.<ProdutoRow>forTableColumn());
+        estoqueNomeColumn.setOnEditCommit(
+                new EventHandler<CellEditEvent<ProdutoRow, String>>() {
+                    @Override
+                    public void handle(CellEditEvent<ProdutoRow, String> t) {
+                        ((ProdutoRow) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setNome(t.getNewValue());
+                    }
+                }
+        );
+        
         estoqueDescColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, String>("descricao")
         );
+        estoqueDescColumn.setCellFactory(TextFieldTableCell.<ProdutoRow>forTableColumn());
+        estoqueDescColumn.setOnEditCommit(
+                new EventHandler<CellEditEvent<ProdutoRow, String>>() {
+                    @Override
+                    public void handle(CellEditEvent<ProdutoRow, String> t) {
+                        ((ProdutoRow) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setDescricao(t.getNewValue());
+                    }
+                }
+        );
+        
         estoqueQtdColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, Integer>("quantidade")
         );
+        estoqueQtdColumn.setCellFactory(TextFieldTableCell.<ProdutoRow, Integer>forTableColumn(new IntegerStringConverter()));
+        estoqueQtdColumn.setOnEditCommit(
+                new EventHandler<CellEditEvent<ProdutoRow, Integer>>() {
+                    @Override
+                    public void handle(CellEditEvent<ProdutoRow, Integer> t) {
+                        ((ProdutoRow) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setQuantidade(t.getNewValue());
+                    }
+                }
+        );
+        
         estoquePrecoColumn.setCellValueFactory(
                 new PropertyValueFactory<ProdutoRow, Float>("preco")
         );
+        estoquePrecoColumn.setCellFactory(TextFieldTableCell.<ProdutoRow, Float>forTableColumn(new FloatStringConverter()));
+        estoquePrecoColumn.setOnEditCommit(
+                new EventHandler<CellEditEvent<ProdutoRow, Float>>() {
+                    @Override
+                    public void handle(CellEditEvent<ProdutoRow, Float> t) {
+                        ((ProdutoRow) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setPreco(t.getNewValue());
+                    }
+                }
+        );
+        
         estoqueProdutoList = FXCollections.observableArrayList();
         estoqueTableView.setItems(estoqueProdutoList);
     }
@@ -287,6 +340,10 @@ public class FXMLMainController implements Initializable {
                 }
             }
         }
+        // Referência aos singletons gerenciadores
+        gerEstoque = GerenciadorEstoque.gerenciador(conn);
+        gerFinanceiro = GerenciadorFinanceiro.gerenciador;
+        
         // Verifica as permissões do usuário
         if (!user.admin) {
             // Desabilita as funcionalidades de administrador
@@ -384,6 +441,8 @@ public class FXMLMainController implements Initializable {
      */
     @FXML
     private void vendaFinaliza(ActionEvent event) {
+        caixa.fechaCompra();
+//        String textoNF = caixa.emiteNotaFiscal();
         clienteAtual = null;
         vendaProdutoList.clear();
     }
@@ -541,7 +600,41 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void estoqueBusca(ActionEvent event) {
+    private void estoqueBusca(ActionEvent event) throws SQLException {
+        // Apaga a lista
+        estoqueProdutoList.clear();
+        // Busca no banco de dados
+        String sql =
+                "SELECT * FROM (\n" +
+                "    SELECT p.cod_produto, p.nome, p.descricao, p.preco, e.quantidade FROM produto p\n" +
+                "        INNER JOIN estoque e ON p.cod_produto=e.cod_produto ORDER BY p.cod_produto\n" +
+                ") WHERE nome LIKE ?\n" +
+                "UNION\n" +
+                "SELECT * FROM (\n" +
+                "    SELECT p.cod_produto, p.nome, p.descricao, p.preco, e.quantidade FROM produto p\n" +
+                "        INNER JOIN estoque e ON p.cod_produto=e.cod_produto ORDER BY p.cod_produto\n" +
+                ") WHERE descricao LIKE ?\n" +
+                "UNION\n" +
+                "SELECT * FROM (\n" +
+                "    SELECT p.cod_produto, p.nome, p.descricao, p.preco, e.quantidade FROM produto p\n" +
+                "        INNER JOIN estoque e ON p.cod_produto=e.cod_produto ORDER BY p.cod_produto\n" +
+                ") WHERE cod_produto LIKE ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, "%"+estoqueBuscaTextField.getText()+"%");
+        stmt.setString(2, "%"+estoqueBuscaTextField.getText()+"%");
+        stmt.setString(3, "%"+estoqueBuscaTextField.getText()+"%");
+        ResultSet rs = stmt.executeQuery();
+        System.out.println(rs);
+        // Insere os resultados na tabela
+        while (rs.next()) {
+            System.out.println(rs.getString("nome"));
+            estoqueProdutoList.add(new ProdutoRow(rs.getInt("cod_produto"),
+                                                  rs.getString("nome"),
+                                                  rs.getString("descricao"),
+                                                  rs.getInt("quantidade"),
+                                                  rs.getFloat("preco")));
+        }
+        estoqueBuscaTextField.clear();
     }
 
     /**
@@ -550,7 +643,20 @@ public class FXMLMainController implements Initializable {
      * @param event 
      */
     @FXML
-    private void estoqueSalva(ActionEvent event) {
+    private void estoqueSalva(ActionEvent event) throws SQLException {
+        for (ProdutoRow pRow : estoqueProdutoList) {
+            // Atualiza quantidade
+            gerEstoque.atualizaProdutoEstoque(pRow.getCodigo(), pRow.getQuantidade());
+            // Atualiza produto
+            Produto produto = new Produto(conn);
+            produto.codigo = pRow.getCodigo();
+            produto.nome = pRow.getNome();
+            produto.descricao = pRow.getDescricao();
+            produto.preco = pRow.getPreco();
+            produto.atualiza();
+        }
+        // Apaga a lista
+        estoqueProdutoList.clear();
     }
     
     /**

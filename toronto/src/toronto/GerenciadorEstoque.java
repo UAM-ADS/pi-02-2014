@@ -28,6 +28,15 @@ public class GerenciadorEstoque {
     public Boolean removeProduto(Produto produto) {
         return null;
     }
+    
+    public void atualizaProdutoEstoque(int cod_produto, int quantidade) throws SQLException {
+        System.out.println("Quantidade: "+quantidade);
+        String sql = "UPDATE estoque SET quantidade=? WHERE cod_produto=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, quantidade);
+        stmt.setInt(2, cod_produto);
+        stmt.executeUpdate();
+    }
 
     public int quantidadeProduto(int id) throws SQLException, ProdutoInexistenteException {
         String sql = "SELECT quantidade FROM estoque WHERE cod_produto=?";

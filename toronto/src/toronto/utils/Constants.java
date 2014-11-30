@@ -47,6 +47,13 @@ public class Constants {
     public static final String JDBC_DRIVER = "org.h2.Driver";
     public static final String DB_URL = "jdbc:h2:~/.toronto/toronto.db";
     
+    public enum ProdutoAttr {
+        NOME,
+        DESCRICAO,
+        QUANTIDADE,
+        PRECO;
+    }
+    
     // Lista de estados brasileiros
     public static final List<String> listaUF = Arrays.asList(
         "AC",
