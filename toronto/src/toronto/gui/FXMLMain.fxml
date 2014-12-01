@@ -506,8 +506,8 @@
                               <Label text="RA: 20467242" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                               <Label text="Andressa Pinheiro Guerra" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                               <Label text="Thiago Ribeiro Baptista" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                              <Label text="RA: XXXXXXX" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                              <Label text="RA: XXXXXXX" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                              <Label text="RA: 20460231" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                              <Label text="RA: 20468075" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                               <Label text="São Paulo, novembro de 2014" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="BOTTOM" />
                            </children>
                         </GridPane>
